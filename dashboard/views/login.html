@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Botify X — Admin Login</title>
+    <style>
+      :root {
+        --bg: #0b1020;
+        --panel: #131a33;
+        --text: #e6eaff;
+        --muted: #8892b0;
+        --accent: #6ee7b7;
+        --accent-2: #60a5fa;
+        --danger: #f87171;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background:
+          radial-gradient(1200px 600px at 10% -10%, rgba(96,165,250,.15), transparent 60%),
+          radial-gradient(900px 500px at 110% 110%, rgba(110,231,183,.12), transparent 60%),
+          var(--bg);
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        color: var(--text);
+      }
+      .card {
+        width: min(420px, 92vw);
+        background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0)) , var(--panel);
+        border: 1px solid rgba(255,255,255,.06);
+        border-radius: 16px;
+        padding: 28px;
+        box-shadow: 0 30px 80px rgba(0,0,0,.45);
+      }
+      .brand {
+        font-weight: 800;
+        letter-spacing: .12em;
+        font-size: 12px;
+        color: var(--accent);
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+      h1 { margin: 0 0 18px; font-size: 22px; }
+      label { display: block; font-size: 12px; color: var(--muted); margin: 12px 0 6px; }
+      input {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 10px;
+        background: #0e1430;
+        color: var(--text);
+        border: 1px solid rgba(255,255,255,.08);
+        outline: none;
+        font-size: 14px;
+      }
+      input:focus { border-color: var(--accent-2); }
+      button {
+        margin-top: 18px;
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 10px;
+        border: 0;
+        font-weight: 700;
+        cursor: pointer;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: #0b1020;
+      }
+      .error {
+        margin-top: 14px;
+        background: rgba(248,113,113,.12);
+        border: 1px solid rgba(248,113,113,.35);
+        color: var(--danger);
+        padding: 10px 12px;
+        border-radius: 10px;
+        font-size: 13px;
+      }
+      .footer { margin-top: 18px; color: var(--muted); font-size: 12px; text-align: center; }
+    </style>
+  </head>
+  <body>
+    <form class="card" method="POST" action="/panel/login">
+      <div class="brand">Botify X · Admin</div>
+      <h1>Sign in to the panel</h1>
+      <label>Username</label>
+      <input name="username" required autocomplete="username" />
+      <label>Password</label>
+      <input name="password" type="password" required autocomplete="current-password" />
+      <button type="submit">Sign in</button>
+      {{error}}
+      <div class="footer">Pairing portal · Botify X v1.0.1</div>
+    </form>
+  </body>
+</html>
