@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{{botName}} — Admin Dashboard</title>
+    <style>
+      :root {
+        --bg: #0b1020;
+        --panel: #131a33;
+        --panel-2: #0e1430;
+        --text: #e6eaff;
+        --muted: #8892b0;
+        --accent: #6ee7b7;
+        --accent-2: #60a5fa;
+        --danger: #f87171;
+        --amber: #fbbf24;
+        --green: #34d399;
+        --red: #f87171;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background:
+          radial-gradient(1200px 600px at 10% -10%, rgba(96,165,250,.15), transparent 60%),
+          radial-gradient(900px 500px at 110% 110%, rgba(110,231,183,.1), transparent 60%),
+          var(--bg);
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        color: var(--text);
+        min-height: 100vh;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 22px 32px;
+        border-bottom: 1px solid rgba(255,255,255,.06);
+      }
+      header .brand { font-weight: 800; letter-spacing: .12em; color: var(--accent); text-transform: uppercase; font-size: 12px; }
+      header h1 { margin: 0; font-size: 20px; }
+      .container { padding: 28px 32px; max-width: 1080px; margin: 0 auto; }
+      .grid { display: grid; gap: 18px; grid-template-columns: 1fr 1fr; }
+      @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+      .card {
+        background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0)) , var(--panel);
+        border: 1px solid rgba(255,255,255,.06);
+        border-radius: 16px;
+        padding: 22px;
+      }
+      .card.success { border-color: rgba(110,231,183,.35); background: linear-gradient(180deg, rgba(110,231,183,.08), rgba(0,0,0,0)), var(--panel); }
+      .card.highlight { border-color: rgba(251,191,36,.35); background: linear-gradient(180deg, rgba(251,191,36,.06), rgba(0,0,0,0)), var(--panel); }
+      .card h2, .card h3 { margin: 0 0 12px; }
+      label { display: block; font-size: 12px; color: var(--muted); margin: 12px 0 6px; }
+      input[type="text"], input[type="tel"] {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 10px;
+        background: var(--panel-2);
+        color: var(--text);
+        border: 1px solid rgba(255,255,255,.08);
+        outline: none;
+        font-size: 14px;
+      }
+      input:focus { border-color: var(--accent-2); }
+      input[readonly] { opacity: .7; }
+      .btn {
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 0;
+        font-weight: 700;
+        cursor: pointer;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: #0b1020;
+      }
+      .btn.small { padding: 6px 10px; font-size: 12px; }
+      .btn.primary { background: linear-gradient(135deg, var(--accent-2), #a78bfa); color: white; }
+      .btn.danger  { background: rgba(248,113,113,.15); color: var(--danger); border: 1px solid rgba(248,113,113,.4); }
+      .btn.ghost   { background: transparent; color: var(--muted); border: 1px solid rgba(255,255,255,.1); }
+      .row { display: flex; gap: 8px; align-items: center; }
+      table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+      th, td { text-align: left; padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,.05); font-size: 14px; }
+      th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+      .muted { color: var(--muted); font-size: 13px; }
+      .badge { padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+      .badge.green { background: rgba(52,211,153,.15); color: var(--green); }
+      .badge.red   { background: rgba(248,113,113,.15); color: var(--red); }
+      .badge.amber { background: rgba(251,191,36,.15); color: var(--amber); }
+      .code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 28px;
+        letter-spacing: .12em;
+        background: var(--panel-2);
+        padding: 14px 18px;
+        border-radius: 10px;
+        margin: 14px 0 6px;
+        text-align: center;
+        border: 1px dashed rgba(255,255,255,.1);
+      }
+      .error {
+        background: rgba(248,113,113,.12);
+        border: 1px solid rgba(248,113,113,.35);
+        color: var(--danger);
+        padding: 10px 12px;
+        border-radius: 10px;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <div class="brand">{{botName}}</div>
+        <h1>Admin dashboard</h1>
+      </div>
+      <form method="POST" action="/panel/logout">
+        <button class="btn ghost">Sign out</button>
+      </form>
+    </header>
+
+    <div class="container">
+      {{ownerCard}}
+
+      <div style="height: 18px;"></div>
+
+      {{userPairBlock}}
+
+      <div class="grid">
+        <div class="card">
+          <h2>Add a user</h2>
+          <p class="muted">Enter a phone number in international format (digits only). A pairing code is generated and shown above.</p>
+          <form method="POST" action="/panel/users">
+            <label>Phone number</label>
+            <input name="phone" type="tel" placeholder="2348012345678" required />
+            <div class="row" style="margin-top: 14px;">
+              <button class="btn">Generate pairing code</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <h2>How it works</h2>
+          <ol class="muted" style="line-height: 1.7;">
+            <li>Pair the owner WhatsApp once at the top of this page.</li>
+            <li>Add a user by phone number and share the pairing code.</li>
+            <li>The user opens WhatsApp → <em>Linked devices</em> → <em>Link with phone number</em> → enters the code.</li>
+            <li>Each user is valid for 30 days. Renew anytime from the table.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 18px;">
+        <h2>Users</h2>
+        <table>
+          <thead>
+            <tr><th>Phone</th><th>Expires</th><th>Status</th><th></th></tr>
+          </thead>
+          <tbody>
+            {{rows}}
+          </tbody>
+        </table>
+      </div>
+
+      <p class="muted" style="margin-top: 22px; text-align: center;">{{botName}} {{botVersion}} · Pairing portal</p>
+    </div>
+  </body>
+</html>
